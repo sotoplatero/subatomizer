@@ -305,33 +305,45 @@ Si el autor quiere el porcentaje, lo pone él al publicar. Es su cuenta y es su 
 
 ### La prueba anti-slop
 
-La lista anti-imitación de la fase 2 caza lo que **él** no hace. Esta caza lo que hacen **todos
-los modelos**, que pasa desapercibido porque suena bien. Léete cada nota buscando esto, y si
-aparece, reescribe:
+La lista anti-imitación caza lo que **él** no hace. Esta caza lo que hacen **todos los
+modelos**, que se cuela porque suena bien.
+
+**La prueba de portabilidad, primero.** Coge cada frase y pregúntate si podría estar en la nota
+de otra persona, sobre otro artículo, sin cambiar una palabra. Si sí, es relleno: bórrala o
+cámbiala por un hecho, un nombre, una cifra o un juicio que solo valga para este texto. Esta
+sola prueba tumba la mitad del slop.
+
+Luego, los tics:
 
 | Tic | Ejemplo |
 |---|---|
-| **El contraste de manual** | «No es X, es Y». «No se trata de X, sino de Y». «X no te da Y. Te da Z» |
-| **El trío** | Tres elementos cuando el material daba dos o cuatro. Tres adjetivos, tres frases, tres ejemplos |
-| **El adorno de apertura** | «En un mundo donde…», «En la era de…», «Todos hemos pasado por…» |
-| **El conector de relleno** | «La realidad es que», «lo cierto es que», «cabe destacar», «en definitiva», «al final del día» |
-| **El elogio vacío** | «potente», «increíble», «brutal», «fascinante», «revolucionario», «clave», «esencial» |
-| **La pregunta retórica que te respondes** | «¿Y sabes qué pasó? Pues esto» |
-| **El lazo final** | Cerrar repitiendo la primera línea con otras palabras, para que quede redondo |
-| **El remate sentencioso** | «Y eso lo cambia todo». «Punto.». «Piénsalo» |
-| **La simetría** | Párrafos del mismo largo, frases con la misma cadencia, todas las notas acabando en pregunta |
-
-Dos comprobaciones más, sobre las nueve a la vez:
-
-- **¿Se parecen entre sí?** Si las nueve tienen el mismo esqueleto —gancho corto, tres líneas,
-  remate seco— el esqueleto es tuyo, no suyo. Rompe al menos tres.
-- **¿Hay alguna frase que él no podría haber escrito?** Táchala aunque sea la mejor de la nota.
-  Una frase demasiado buena en boca ajena es lo que primero delata a un texto de máquina.
+| **Contraste de manual** | «No es X, es Y». «La pregunta no es X, sino Y» |
+| **Enumeración negativa** | «No es una herramienta. No es un truco. Es un método» |
+| **El trío** | Tres elementos cuando el material daba dos o cuatro |
+| **Falsa confidencia** | «Lo que nadie te cuenta», «lo que casi todos se saltan» |
+| **Revelación con dos puntos** | «Y lo que lo hace funcionar: otro agente lo corrige» |
+| **Adorno de apertura** | «En un mundo donde…», «Todos hemos pasado por…» |
+| **Conector de relleno** | «La realidad es que», «en definitiva», «al final del día» |
+| **Elogio vacío** | «potente», «brutal», «clave», «esencial», «revolucionario» |
+| **Puffery de importancia** | «Marca un antes y un después», «lo cambia todo» |
+| **Atribución sin nombre** | «Los expertos dicen», «está demostrado», «todo el mundo sabe» |
+| **Pregunta retórica que te respondes** | «¿Y sabes qué pasó? Pues esto» |
+| **Aforismo final** | Cerrar con una frase profunda, un lazo que repite la apertura, o «Punto.» |
+| **Rotación de sinónimos** | Llamar a lo mismo «la herramienta», «el sistema» y «la solución» |
 
 ### Las nueve juntas
 
-Míralas en bloque antes de verificar: **nueve anclas distintas** —dos notas del mismo fragmento
-son la misma nota escrita dos veces— y **como mucho dos candidatas por objetivo**.
+Míralas en bloque antes de verificar:
+
+- **Nueve anclas distintas.** Dos notas del mismo fragmento son la misma nota escrita dos veces.
+- **Como mucho dos candidatas por objetivo.**
+- **¿Se parecen entre sí?** Si las nueve tienen el mismo esqueleto —gancho corto, tres líneas,
+  remate seco— el esqueleto es del modelo, no suyo. Rompe al menos tres.
+- **¿Hay alguna frase que él no podría haber escrito?** Táchala aunque sea la mejor de la nota.
+
+Cuando tumbes una nota por cualquiera de estas cosas, **nombra el tic y cita la línea**
+—«aforismo final: *y eso lo cambia todo*»—. Un veredicto sin la cita no se puede comprobar, y
+el autor tiene que poder llevarte la contraria.
 
 ---
 
@@ -475,6 +487,11 @@ uno a cinco párrafos) y `writebuildscale.substack.com/p/the-2026-substack-notes
 objetivo por nota).
 
 Se deja fuera a conciencia el repertorio de curiosidad que esas mismas fuentes recomiendan.
+
+La prueba anti-slop debe bastante a **no-ai-slop**, de Peter Yang
+(`github.com/petergyang/no-ai-slop`), sobre todo la prueba de portabilidad y la idea de nombrar
+el patrón y citar la línea en vez de dar una puntuación. Si lo que tienes entre manos es un
+texto largo y no una nota, ese skill es mejor herramienta que este.
 
 Si quien lo usa tiene instalado **subnotes**, hay un salto más: su histórico de notas publicadas
 dice qué formatos le funcionan **a él** con sus propios números, y avisa de si ya había dicho
