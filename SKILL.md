@@ -4,7 +4,7 @@ description: >-
   Atomiza un artículo ya publicado en cinco notas de Substack escritas con la voz del propio
   autor, destilada del artículo, y ancladas a fragmentos exactos del texto. Estudia cómo
   escribe quien lo firmó y qué material da el texto, escribe nueve candidatas, comprueba una
-  por una con Grep que sus cifras y sus citas estén de verdad en el original, y entrega las
+  por una, trayendo la frase del original que respalda cada cifra y cada cita, y entrega las
   cinco mejores —hasta dos de ellas marcadas como lectura del texto y no como el texto— más las
   cuatro descartadas con su motivo. Úsalo cuando alguien pase la URL de
   un artículo o de un post de Substack y quiera sacarle notas; cuando pida repartir, trocear,
@@ -21,9 +21,9 @@ Un modelo atomizando un artículo hace dos destrozos. Redondea la cifra, retoca 
 inventa el ejemplo. Y escribe las notas con su propia voz de modelo, que suena a cualquiera.
 Quien publica eso lo hace con su nombre encima.
 
-Contra lo primero, una comprobación mecánica que no se salta: **el artículo se guarda en un
-fichero y cada cifra y cada cita se buscan ahí con Grep**. Contra lo segundo, el propio
-artículo: lo escribió él, así que ahí está su voz.
+Contra lo primero, una regla que no se salta: **de cada cifra y de cada cita hay que traer la
+frase del artículo que la respalda**, y donde haya fichero se confirma con Grep. Contra lo
+segundo, el propio artículo: lo escribió él, así que ahí está su voz.
 
 Cinco fases: **traer el texto, estudiarlo, escribir nueve, verificarlas, elegir cinco.**
 
@@ -60,8 +60,8 @@ WebFetch devuelve una versión del artículo, no el artículo: lo pasa por un mo
 casi siempre, pero **dilo antes de las notas** —«lo que compruebo es esa versión, no tu texto»—
 y no lo llames falta de acceso, que bajarlo lo bajaste.
 
-Si no puedes escribir ficheros —claude.ai, el móvil— no hay Grep: la fase 4 pasa a ser lectura,
-se dice igual de claro, y lo que no localices a la primera cae.
+Si no puedes escribir ficheros —claude.ai, el móvil— la fase 4 funciona igual: lo que no
+tendrás es el Grep que la confirma, así que lo que no localices a la primera cae.
 
 ---
 
@@ -303,6 +303,31 @@ Si el autor quiere el porcentaje, lo pone él al publicar. Es su cuenta y es su 
 - **Afirmar un hecho que no está en el artículo** — porcentajes del sector, lo que «suele
   pasar», lo que «hace la gente». Una inferida saca conclusiones, no datos.
 
+### La prueba anti-slop
+
+La lista anti-imitación de la fase 2 caza lo que **él** no hace. Esta caza lo que hacen **todos
+los modelos**, que pasa desapercibido porque suena bien. Léete cada nota buscando esto, y si
+aparece, reescribe:
+
+| Tic | Ejemplo |
+|---|---|
+| **El contraste de manual** | «No es X, es Y». «No se trata de X, sino de Y». «X no te da Y. Te da Z» |
+| **El trío** | Tres elementos cuando el material daba dos o cuatro. Tres adjetivos, tres frases, tres ejemplos |
+| **El adorno de apertura** | «En un mundo donde…», «En la era de…», «Todos hemos pasado por…» |
+| **El conector de relleno** | «La realidad es que», «lo cierto es que», «cabe destacar», «en definitiva», «al final del día» |
+| **El elogio vacío** | «potente», «increíble», «brutal», «fascinante», «revolucionario», «clave», «esencial» |
+| **La pregunta retórica que te respondes** | «¿Y sabes qué pasó? Pues esto» |
+| **El lazo final** | Cerrar repitiendo la primera línea con otras palabras, para que quede redondo |
+| **El remate sentencioso** | «Y eso lo cambia todo». «Punto.». «Piénsalo» |
+| **La simetría** | Párrafos del mismo largo, frases con la misma cadencia, todas las notas acabando en pregunta |
+
+Dos comprobaciones más, sobre las nueve a la vez:
+
+- **¿Se parecen entre sí?** Si las nueve tienen el mismo esqueleto —gancho corto, tres líneas,
+  remate seco— el esqueleto es tuyo, no suyo. Rompe al menos tres.
+- **¿Hay alguna frase que él no podría haber escrito?** Táchala aunque sea la mejor de la nota.
+  Una frase demasiado buena en boca ajena es lo que primero delata a un texto de máquina.
+
 ### Las nueve juntas
 
 Míralas en bloque antes de verificar: **nueve anclas distintas** —dos notas del mismo fragmento
@@ -310,70 +335,57 @@ son la misma nota escrita dos veces— y **como mucho dos candidatas por objetiv
 
 ---
 
-## 4. Verificar con Grep
+## 4. Verificar
 
-No a ojo. Releer una nota que te acabas de inventar no te dice que te la inventaste: te sigue
-pareciendo bien. Se busca en `articulo.txt`, que para eso se guardó.
+Releer una nota que te acabas de inventar no te dice que te la inventaste: te sigue pareciendo
+bien. Así que no se relee. **De cada cifra y de cada frase entrecomillada, se trae la frase
+entera del artículo donde aparece.**
 
-Si estás en un entorno sin ficheros ni Grep, esta fase no desaparece: **se degrada, y se dice
-que está degradada** con las palabras de la fase 1. Lo que no cambia es el final: la nota que no
-puedas anclar no se entrega.
+No «sí, el 514 está». Esto:
 
-De cada nota salen tres listas: **su ancla**, **sus cifras** y **sus frases entrecomilladas**.
-Cada elemento, una búsqueda.
+> 514 → «Una me trajo 514 suscriptores y las otras quince no llegaron a veinte entre todas»
 
-**Cifras** — con límite de palabra, o «514» se daría por bueno porque el artículo diga «5140»:
+Inventarse un número es fácil. Inventarse la frase que lo rodea, con el resto del párrafo
+delante, es mucho más difícil y se ve enseguida. Si no puedes traer la frase, no está: la nota
+cae.
 
-```
-Grep  pattern: \b514\b   path: articulo.txt
-```
-
-**Anclas y citas** — busca un trozo distintivo de cuatro a seis palabras **sin comillas, sin
-guiones largos y sin puntuación final**. Es lo que evita que una cita correcta caiga por un
-carácter tipográfico, que es el falso negativo más común:
+Donde haya fichero, **confírmalo con Grep** —es un segundo y no tiene memoria ni orgullo—:
 
 ```
+Grep  pattern: 514                    path: articulo.txt
 Grep  pattern: me trajo 514 suscriptores   path: articulo.txt
 ```
 
-**Con la herramienta Grep del agente, no con `grep` por consola.** No es manía: en Git Bash sobre
-Windows, `grep` aborta con «core dumped» y el shell devuelve lo mismo que devolvería si no
-hubiera encontrado nada. Se comprobó en una ejecución real y dio veinticuatro falsos «no está»
-seguidos. Si te hubieras fiado, habrías tumbado nueve notas correctas.
+Las cifras con ``, o «514» pasaría por estar dentro de «5140». Las frases, por un trozo de
+cuatro a seis palabras sin comillas ni puntuación, que es lo que evita que una cita correcta
+caiga por un carácter tipográfico.
 
-De ahí la regla que va con ella: **cero resultados y herramienta rota no son lo mismo**. Antes
-de dar por caída ninguna nota, busca un fragmento que sepas que está —el título del artículo
-sirve—. Si ese tampoco aparece, lo que falla es la búsqueda, no las notas: se arregla y se
-repite. Una tanda entera cayendo a la vez casi nunca significa que las escribieras mal.
-
-Con la herramienta sana, cero resultados es una caída. No se interpreta, no se da el beneficio de la duda, no se «ajusta
-la búsqueda hasta que salga».
+Y una cautela que salió de una ejecución real: **cero resultados y herramienta rota no son lo
+mismo**. Si caen varias a la vez, busca algo que sepas que está —el título sirve—. Si eso
+tampoco aparece, lo roto es la búsqueda. Con la herramienta sana, cero resultados es una caída y
+no se «ajusta la búsqueda hasta que salga».
 
 ### Ocho motivos de caída
 
 | Fallo | Qué lo dispara |
 |---|---|
-| **ancla-existe** | El `ancla` no aparece en `articulo.txt` |
+| **ancla-existe** | El `ancla` no aparece en el artículo |
 | **citas-literales** | Una frase entrecomillada de la nota no está literal en el artículo |
-| **cifras-reales** | Un número con decimales, con %, con moneda o con unidad detrás —o cualquier entero mayor que diez— no está en el artículo. Incluye las **cifras derivadas**: el porcentaje o la suma que tú calculaste a partir de las suyas no está en el texto y cae igual |
-| **hecho-nuevo** | La nota afirma como cierto algo comprobable que el artículo no dice: una estadística, lo que hace «la gente», lo que pasa «siempre». Se aplica igual a las ancladas y a las inferidas, y es el único freno de las segundas |
+| **cifras-reales** | Un número con decimales, con %, con moneda o con unidad detrás —o cualquier entero mayor que diez— no está en el artículo. Incluye las **derivadas**: el porcentaje o la suma que calculaste tú a partir de las suyas |
+| **hecho-nuevo** | La nota afirma como cierto algo que el artículo no dice: una estadística, lo que hace «la gente», lo que pasa «siempre». Es el único freno de las inferidas |
 | **longitud** | Menos de 50 o más de 250 palabras |
 | **gancho** | La primera línea pasa de 120 caracteres |
 | **sin-enlaces** | Hay una URL o un dominio dentro de la nota |
 | **sin-captación** | Aparece «suscríbete», «sígueme», «enlace en bio» o equivalente |
 
-Siete de los ocho se comprueban con Grep. **`hecho-nuevo` no**: exige leer la nota preguntándose
-«¿esto lo dice el artículo o lo estoy dando por sabido?». Es el único que depende de tu criterio,
-así que aplícalo con dureza — en la duda, cae.
+`hecho-nuevo` es el único que no tiene frase de respaldo que traer: exige preguntarte «¿esto lo
+dice el artículo o lo estoy dando por sabido?». En la duda, cae.
 
-### Un aviso
+**Aviso, no caída** — `cifras-menores`: un entero de uno a diez que no está en el artículo. Casi
+siempre es legítimo («van 3 cosas que aprendí» cuenta los puntos de la propia nota), pero si
+llega hasta la entrega **se dice nombrando el número**.
 
-**cifras-menores**: un entero de uno a diez que no está en el artículo. Casi siempre es
-legítimo —«van 3 cosas que aprendí» cuenta los puntos de la propia nota—, así que no tumba
-nada. Pero **si llega hasta la entrega se dice al usuario nombrando el número**: es por donde
-se cuela un dato falso pequeño.
-
-La nota que cae **se arregla y se vuelve a verificar**. No se pasa a la selección con fallos
+La nota que cae se arregla y se vuelve a verificar. No se pasa a la selección con fallos
 pendientes, ni se entrega «avisando de que igual el dato no está».
 
 ---
@@ -388,7 +400,7 @@ Seis ejes, de 0 a 3. Máximo 18.
 
 | Eje | 3 puntos | 0 puntos |
 |---|---|---|
-| **Voz** | No incumple **ni un punto** de la lista anti-imitación, y usa léxico suyo del perfil | Incumple dos o más, o no hay una sola palabra que sea suya |
+| **Voz** | No incumple **ni un punto** de la lista anti-imitación ni de la anti-slop, y usa léxico suyo del perfil | Incumple dos o más, o no hay una sola palabra que sea suya |
 | **Ancla** | Un hecho duro: cifra, nombre, frase literal | Una generalidad que saldría de cualquier artículo |
 | **Autonomía** | Se entiende sin haber leído el artículo | Solo tiene sentido si ya lo leíste |
 | **Gancho** | La primera línea dice algo concreto | Podría encabezar otra nota cualquiera |
