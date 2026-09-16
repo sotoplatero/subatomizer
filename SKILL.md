@@ -31,102 +31,37 @@ Cinco fases: **traer el texto, estudiarlo, escribir nueve, verificarlas, elegir 
 
 ## 1. Traer el artículo y guardarlo
 
-### Con WebFetch
-
-Es la vía por defecto: está siempre, no hay que instalar nada y funciona igual en la terminal
-que en el chat.
-
-El prompt importa más que la herramienta. Si pides un resumen te devuelve un resumen, y sobre
-un resumen no se puede comprobar una cita:
+Baja el artículo con WebFetch, pidiéndolo literal:
 
 > Devuelve el texto íntegro del artículo, literal y sin resumir: título, subtítulo y todos los
 > párrafos en orden, con sus cifras, sus nombres y sus frases entrecomilladas tal cual están.
 > No interpretes, no acortes, no reformules.
 
-**Lo que devuelve no es la página: es una versión de la página.** WebFetch la pasa por un modelo
-pequeño, así que lo que compruebes en la fase 4 lo estarás comprobando contra esa versión. La
-mayoría de las veces basta. Pero se dice, con estas palabras o parecidas, **antes de las notas**:
+Guárdalo en `~/.claude/subatomizer/<fecha>-<slug>/articulo.txt`. **Ese fichero es el patrón de
+medida**: contra él se comprueba todo en la fase 4.
 
-> Bajé el artículo, pero por una vía que lo reescribe al recuperarlo. Lo que compruebo es esa
-> versión, no tu texto original. Si algo te suena raro en una cifra o en una cita, mira el
-> artículo.
+Antes de seguir, míralo:
 
-### La prueba de fidelidad
+- **Menos de 300 palabras** — de ahí no salen cinco notas ancladas. Se dice y se para.
+- **Corte de pago** — se avisa antes de las notas y se trabaja con lo visible.
+- **Trescientas palabras y ninguna cifra en un artículo que va de números** — te devolvieron un
+  resumen. Repite pidiendo el texto literal.
 
-Antes de seguir, dos comprobaciones de treinta segundos que delatan un resumen disfrazado:
-
-1. **El recuento.** Un post normal ronda las mil o dos mil palabras. Si vuelven trescientas y no
-   había muro de pago, eso es un resumen.
-2. **Las cifras y los nombres.** Si el artículo trata de números y en lo recuperado no hay
-   ninguno, o si las frases vienen redondeadas —«más de quince» donde debería haber un número
-   exacto—, lo que tienes es una paráfrasis.
-
-Si falla cualquiera de las dos: repite pidiendo el texto literal, y si vuelve igual, pasa al
-navegador o pide el artículo pegado. **No se escriben notas sobre una paráfrasis sin decirlo.**
-
-### Cuándo hace falta un navegador
-
-WebFetch no puede con tres cosas, y en las tres hay que abrir la página de verdad —con
-`agent-browser`, con la extensión de Claude en Chrome, con un MCP de Playwright, con lo que
-tengas—:
-
-- **Un post de pago**, incluso tuyo: sin tu sesión llega cortado en el muro.
-- **Una página montada con JavaScript**: vuelve el menú y poco más.
-- **Cuando la prueba de fidelidad falla** y quieres el texto exacto.
-
-Con `agent-browser`, en Substack el cuerpo vive en `.available-content` y son dos órdenes:
+**Abre la página con un navegador** —`agent-browser`, la extensión de Claude en Chrome, un MCP
+de Playwright— cuando el post sea de pago, cuando la página se monte con JavaScript, o cuando lo
+recuperado siga oliendo a resumen. En Substack el cuerpo está en `.available-content`:
 
 ```bash
 agent-browser open "<url>"
 agent-browser get text ".available-content"
 ```
 
-Sale el texto limpio, sin menú, sin barra lateral y sin el pie de suscripción. En otros sitios,
-prueba `article` y, si no, mira el `snapshot`. Lo que **no** vale es quedarse con la página
-entera: el menú y los formularios meten palabras que no escribió él y falsean tanto el recuento
-como el perfil de voz.
+WebFetch devuelve una versión del artículo, no el artículo: lo pasa por un modelo pequeño. Basta
+casi siempre, pero **dilo antes de las notas** —«lo que compruebo es esa versión, no tu texto»—
+y no lo llames falta de acceso, que bajarlo lo bajaste.
 
-### Guardarlo, siempre
-
-```
-~/.claude/subatomizer/<fecha>-<slug>/articulo.txt
-```
-
-Texto plano, el artículo entero, sin tocar, **venga del navegador o de WebFetch**. Este fichero
-es el patrón de medida: sin él no hay Grep, y sin Grep la fase 4 es el modelo dándose la razón a
-sí mismo. Si la sesión se cae, también es lo único que se salva.
-
-Esto es lo que hace que WebFetch siga valiendo: guardas lo que devolvió y compruebas contra eso,
-carácter a carácter. La verificación sigue siendo mecánica. Lo que baja de calidad es la fuente,
-no la comprobación — y por eso el aviso de arriba habla de la fuente y no de la fase 4.
-
-### Si no puedes escribir ficheros
-
-Pasa en claude.ai y en las apps del móvil: no hay terminal, no hay disco y no hay Grep. El
-skill sigue sirviendo, pero **cambia lo que puedes prometer, y eso se dice al principio, no al
-final**:
-
-> Aquí no puedo guardar el artículo en un fichero ni buscar dentro de él, así que he comprobado
-> las cifras y las citas leyendo el texto que recuperé, no buscándolas. Localizar no es lo mismo
-> que verificar: ninguna nota lleva un dato que no haya visto ahí, pero yo también soy quien las
-> escribió.
-
-**No digas «no tuve internet» ni «no tuve acceso»**, porque no es verdad y confunde: bajaste el
-artículo. Lo que no tienes es dónde guardarlo y con qué buscar dentro.
-
-Y con la comprobación debilitada, el listón sube en vez de bajar: **cualquier cifra o frase que
-no encuentres a la primera, cae**. Nada de «seguro que estaba más arriba». En este modo no se
-rescata ninguna nota dudosa, y las inferidas —que ya dependen de tu criterio— se quedan en una
-como mucho.
-
-### Antes de seguir
-
-Tres cosas que, si pasan, se dicen en voz alta:
-
-- **Menos de 300 palabras**: de ahí no salen cinco notas ancladas. Se dice y se para.
-- **Corte de pago** («sigue leyendo con una suscripción»): llegó truncado. Se avisa **antes** de
-  las notas, no al final, y se trabaja con lo visible.
-- **Solo menú y cuatro frases**: no se sacó el artículo. Pídele al usuario que lo pegue.
+Si no puedes escribir ficheros —claude.ai, el móvil— no hay Grep: la fase 4 pasa a ser lectura,
+se dice igual de claro, y lo que no localices a la primera cae.
 
 ---
 
