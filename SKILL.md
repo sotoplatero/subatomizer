@@ -51,6 +51,10 @@ prueba `article` y, si no, mira el `snapshot` para ver dónde está el cuerpo. L
 es quedarse con la página entera: el menú y los formularios meten palabras que no escribió él y
 falsean tanto el recuento como el perfil de voz.
 
+Si no tienes `agent-browser`, **vale cualquier navegador que tengas a mano**: la extensión de
+Claude en Chrome, un MCP de Playwright, el que sea. Lo que importa no es la herramienta, es que
+el texto llegue tal cual está en la página.
+
 ### Si no hay navegador, WebFetch
 
 Pidiéndolo literal. El prompt importa: si pides un resumen te devuelve un resumen, y sobre un
@@ -73,6 +77,21 @@ te la reformularan. En la duda, la nota cae.
 Texto plano, el artículo entero, sin tocar. **Este fichero es el patrón de medida**: sin él no
 hay Grep, y sin Grep la fase 4 es el modelo dándose la razón a sí mismo. Si la sesión se cae,
 también es lo único que se salva.
+
+### Si no puedes escribir ficheros
+
+Pasa en claude.ai y en las apps del móvil: no hay terminal, no hay disco y no hay Grep. El
+skill sigue sirviendo, pero **cambia lo que puedes prometer, y eso se dice al principio, no al
+final**:
+
+> No tuve navegador ni pude guardar el artículo en un fichero, así que la comprobación es
+> lectura contra el texto que recuperé, no una búsqueda. Ninguna nota lleva una cifra o una
+> cita que no haya localizado ahí, pero eso no es lo mismo que haberlo verificado.
+
+Y con la comprobación debilitada, el listón sube en vez de bajar: **cualquier cifra o frase que
+no encuentres a la primera, cae**. Nada de «seguro que estaba más arriba». En este modo no se
+rescata ninguna nota dudosa, y las inferidas —que ya dependen de tu criterio— se quedan en una
+como mucho.
 
 ### Antes de seguir
 
@@ -334,6 +353,10 @@ son la misma nota escrita dos veces— y **como mucho dos candidatas por objetiv
 
 No a ojo. Releer una nota que te acabas de inventar no te dice que te la inventaste: te sigue
 pareciendo bien. Se busca en `articulo.txt`, que para eso se guardó.
+
+Si estás en un entorno sin ficheros ni Grep, esta fase no desaparece: **se degrada, y se dice
+que está degradada** con las palabras de la fase 1. Lo que no cambia es el final: la nota que no
+puedas anclar no se entrega.
 
 De cada nota salen tres listas: **su ancla**, **sus cifras** y **sus frases entrecomilladas**.
 Cada elemento, una búsqueda.
